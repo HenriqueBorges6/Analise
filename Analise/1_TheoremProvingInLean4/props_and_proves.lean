@@ -14,7 +14,7 @@ example : p ∧ q ↔ q ∧ p :=
 
 example : p ∨ q ↔ q ∨ p :=
   Iff.intro
-    (
+    ( -- p ∨ q → q ∨ p
       fun h : p ∨ q =>
       Or.elim h
         ( fun hp : p =>
