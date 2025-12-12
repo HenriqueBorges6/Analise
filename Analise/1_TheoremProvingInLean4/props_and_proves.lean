@@ -120,7 +120,47 @@ example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) :=
     )
   )
 
-example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := sorry
+example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) :=
+  Iff.intro
+  ( -- p ∨ (q ∧ r) → (p ∨ q) ∧ (p ∨ r)
+    fun h : p ∨ (q ∧ r) =>
+    Or.elim h
+    (
+      fun hp : p =>
+      show (p ∨ q) ∧ (p ∨ r) from
+        And.intro (Or.intro_left q hp) (Or.intro_left r hp)
+    )
+    (
+      fun hqr : q ∧ r =>
+      show (p ∨ q) ∧ (p ∨ r) from
+        And.intro (Or.intro_right p hqr.left) (Or.intro_right p hqr.right)
+    )
+  )
+  (
+    fun h : (p ∨ q) ∧ (p ∨ r) =>
+    have hpq : p ∨ q := h.left
+    have hpr : p ∨ r := h.right
+    Or.elim hpq
+    (
+      fun hp : p =>
+      show p ∨ (q ∧ r) from
+      Or.intro_left (q ∧ r) hp
+    )
+    (
+      fun hq : q =>
+      Or.elim hpr
+      (
+        fun hp : p =>
+        show p ∨ (q ∧ r) from
+        Or.intro_left (q ∧ r) hp
+      )
+      (
+        fun hr : r =>
+        show p ∨ (q ∧ r) from
+        Or.intro_right p (And.intro hq hr)
+      )
+    )
+  )
 
 -- other properties
 example : (p → (q → r)) ↔ (p ∧ q → r) := sorry
