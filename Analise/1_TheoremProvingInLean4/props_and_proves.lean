@@ -163,7 +163,21 @@ example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) :=
   )
 
 -- other properties
-example : (p → (q → r)) ↔ (p ∧ q → r) := sorry
+example : (p → (q → r)) ↔ (p ∧ q → r) :=
+  Iff.intro
+  ( -- p → (q → r)
+    fun h : p → ( q → r) =>
+    fun hpq : p ∧ q =>
+      have hp : p := hpq.left
+      have hq : q := hpq.right
+    show r from h hp hq
+  )
+  ( -- (p ∧ q ) → r
+    fun h : (p ∧ q) → r =>
+    fun hp : p =>
+    fun hq : q =>
+    show r from  h (And.intro hp hq)
+  )
 
 example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) := sorry
 
