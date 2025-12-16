@@ -230,7 +230,9 @@ example : ¬p ∨ ¬q → ¬(p ∧ q) :=
       show False from hnq hpq.right
     )
 
-example : ¬(p ∧ ¬p) := sorry
+example : ¬(p ∧ ¬p) :=
+  fun hpnp : p ∧ ¬p =>
+  show False from hpnp.right hpnp.left
 
 example : p ∧ ¬q → ¬(p → q) := sorry
 
