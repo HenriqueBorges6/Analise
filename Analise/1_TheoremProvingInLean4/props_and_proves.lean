@@ -217,8 +217,18 @@ example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=
     )
   )
 
-
-example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
+example : ¬p ∨ ¬q → ¬(p ∧ q) :=
+    fun h : ¬p ∨ ¬q =>
+    fun hpq : p ∧ q =>
+    Or.elim h
+    (
+      fun hnp : ¬p =>
+      show False from hnp hpq.left
+    )
+    (
+      fun hnq : ¬q =>
+      show False from hnq hpq.right
+    )
 
 example : ¬(p ∧ ¬p) := sorry
 
