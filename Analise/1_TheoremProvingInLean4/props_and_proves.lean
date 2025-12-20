@@ -234,14 +234,56 @@ example : ¬(p ∧ ¬p) :=
   fun hpnp : p ∧ ¬p =>
   show False from hpnp.right hpnp.left
 
-example : p ∧ ¬q → ¬(p → q) := sorry
+example : p ∧ ¬q → ¬(p → q) :=
+  fun h : p ∧ ¬q =>
+  have hp : p := h.left
+  have hnq : ¬q := h.right
+  fun pq : p → q =>
+  show False from hnq (pq hp)
 
-example : ¬p → (p → q) := sorry
+example : ¬p → (p → q) :=
+  fun h : ¬p =>
+  fun hp : p =>
+  False.elim (h hp)
 
-example : (¬p ∨ q) → (p → q) := sorry
+example : (¬p ∨ q) → (p → q) :=
+  fun h : ¬p ∨ q =>
+  fun hp : p =>
+  Or.elim h
+  (
+    fun hnp : ¬p =>
+    False.elim (hnp hp)
+  )
+  (
+    fun hq => hq
+  )
 
-example : p ∨ False ↔ p := sorry
+example : p ∨ False ↔ p :=
+  Iff.intro
+  (
+    fun h : p ∨ False =>
+    Or.elim h
+    ( fun hp : p => show p from hp)
+    ( fun hf : False => show p from False.elim hf )
+  )
+  (
+    fun h : p =>
+    show p ∨ False from Or.intro_left False h
+  )
 
-example : p ∧ False ↔ False := sorry
+example : p ∧ False ↔ False :=
+  Iff.intro
+  (
+    fun h : p ∧ False =>
+    show False from h.right
+  )
+  (
+    fun h : False =>
+    show p ∧ False from False.elim h
+  )
 
-example : (p → q) → (¬q → ¬p) := sorry
+example : (p → q) → (¬q → ¬p) :=
+  fun h : p → q =>
+  fun hnq : ¬q =>
+  fun hp: p =>
+  show False from False.elim (hnq (h hp))
